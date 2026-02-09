@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autumn Point | Timeless Seasonal Apparel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'autumn-rust': '#a34e2b',
+                        'autumn-gold': '#d4a373',
+                        'autumn-moss': '#606c38',
+                        'autumn-cream': '#fefae0',
+                        'autumn-dark': '#283618',
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        html { scroll-behavior: smooth; }
+        .hero-gradient {
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80&w=2070');
+            background-size: cover;
+            background-position: center;
+        }
+        .editorial-image {
+            aspect-ratio: 4/5;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body class="bg-autumn-cream text-autumn-dark font-sans">
+
+    <!-- Announcement Bar -->
+    <div class="bg-autumn-dark text-autumn-cream text-center py-2 text-xs uppercase tracking-widest">
+        Free Worldwide Shipping on Orders Over $150
+    </div>
+
+    <!-- Navigation -->
+    <header class="sticky top-0 z-50 bg-autumn-cream/90 backdrop-blur-md border-b border-autumn-rust/10">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center py-6">
+            <nav class="hidden md:flex space-x-8 text-sm uppercase tracking-widest font-semibold">
+                <a href="#new" class="hover:text-autumn-rust transition">New Arrivals</a>
+                <a href="#collections" class="hover:text-autumn-rust transition">Collections</a>
+            </nav>
+
+            <a href="#" class="text-3xl font-serif font-bold text-autumn-rust tracking-tighter">
+                Autumn Point
+            </a>
+
+            <div class="flex items-center space-x-6">
+                <a href="#about" class="hidden md:block text-sm uppercase tracking-widest font-semibold hover:text-autumn-rust transition">Our Story</a>
+                <button class="relative">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-width="1.5"/></svg>
+                    <span class="absolute -top-2 -right-2 bg-autumn-rust text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
+                </button>
+                <button class="md:hidden" onclick="toggleMenu()">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-width="1.5"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-gradient h-[90vh] flex items-center justify-center text-center text-white px-6">
+            <div class="max-w-3xl">
+                <h2 class="text-sm uppercase tracking-[0.3em] mb-4 opacity-90">The Equinox Collection</h2>
+                <h1 class="text-5xl md:text-7xl font-serif mb-8 leading-tight">Warmth Found in Every Layer</h1>
+                <a href="#new" class="inline-block bg-white text-autumn-dark px-10 py-4 font-semibold uppercase tracking-widest hover:bg-autumn-rust hover:text-white transition duration-500">
+                    Shop The Look
+                </a>
+            </div>
+        </section>
+
+        <!-- Featured Collections Grid -->
+        <section id="collections" class="py-20 px-6 lg:px-12">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Visual Placeholder: Outerwear -->
+                <div class="relative group cursor-pointer overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=800" class="editorial-image w-full transition duration-700 group-hover:scale-105" alt="Knitwear">
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition duration-500"></div>
+                    <div class="absolute bottom-10 left-10 text-white">
+                        <h3 class="text-2xl font-serif">Premium Knitwear</h3>
+                        <p class="text-sm uppercase tracking-widest mt-2 border-b border-white inline-block">Explore</p>
+                    </div>
+                </div>
+
+                <!-- Visual Placeholder: Accessories -->
+                <div class="relative group cursor-pointer overflow-hidden lg:mt-12">
+                    <img src="https://images.unsplash.com/photo-1511406361295-0a5ff814c0ad?auto=format&fit=crop&q=80&w=800" class="editorial-image w-full transition duration-700 group-hover:scale-105" alt="Accessories">
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition duration-500"></div>
+                    <div class="absolute bottom-10 left-10 text-white">
+                        <h3 class="text-2xl font-serif">Heritage Accessories</h3>
+                        <p class="text-sm uppercase tracking-widest mt-2 border-b border-white inline-block">Explore</p>
+                    </div>
+                </div>
+
+                <!-- Visual Placeholder: Tailoring -->
+                <div class="relative group cursor-pointer overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1594932224491-fa55181ef01a?auto=format&fit=crop&q=80&w=800" class="editorial-image w-full transition duration-700 group-hover:scale-105" alt="Tailoring">
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition duration-500"></div>
+                    <div class="absolute bottom-10 left-10 text-white">
+                        <h3 class="text-2xl font-serif">Seasonal Tailoring</h3>
+                        <p class="text-sm uppercase tracking-widest mt-2 border-b border-white inline-block">Explore</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Arrivals Showcase -->
+        <section id="new" class="bg-autumn-dark text-autumn-cream py-24 px-6 lg:px-12">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex justify-between items-end mb-12">
+                    <div>
+                        <h2 class="text-4xl font-serif italic mb-2">New Arrivals</h2>
+                        <p class="text-autumn-gold uppercase tracking-[0.2em] text-xs">Fresh from the harvest</p>
+                    </div>
+                    <a href="#" class="hidden md:block text-sm border-b border-autumn-gold pb-1">View All Arrivals</a>
+                </div>
+
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-12">
+                    <!-- Product 1 -->
+                    <div class="group">
+                        <div class="overflow-hidden mb-4 aspect-[3/4] bg-white/5">
+                            <img src="https://placehold.co/600x800/283618/fefae0?text=Product+Visual+1" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt="Wool Coat">
+                        </div>
+                        <h4 class="font-serif text-lg">Oversized Cashmere Scarf</h4>
+                        <p class="text-autumn-gold mt-1">$120.00</p>
+                    </div>
+                    <!-- Product 2 -->
+                    <div class="group">
+                        <div class="overflow-hidden mb-4 aspect-[3/4] bg-white/5">
+                            <img src="https://placehold.co/600x800/a34e2b/fefae0?text=Product+Visual+2" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt="Knit Sweater">
+                        </div>
+                        <h4 class="font-serif text-lg">Rustic Wool Cardigan</h4>
+                        <p class="text-autumn-gold mt-1">$245.00</p>
+                    </div>
+                    <!-- Product 3 -->
+                    <div class="group">
+                        <div class="overflow-hidden mb-4 aspect-[3/4] bg-white/5">
+                            <img src="https://placehold.co/600x800/d4a373/283618?text=Product+Visual+3" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt="Trousers">
+                        </div>
+                        <h4 class="font-serif text-lg">Amber Corduroy Trousers</h4>
+                        <p class="text-autumn-gold mt-1">$185.00</p>
+                    </div>
+                    <!-- Product 4 -->
+                    <div class="group">
+                        <div class="overflow-hidden mb-4 aspect-[3/4] bg-white/5">
+                            <img src="https://placehold.co/600x800/606c38/fefae0?text=Product+Visual+4" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt="Dress">
+                        </div>
+                        <h4 class="font-serif text-lg">Forest Silk Slip Dress</h4>
+                        <p class="text-autumn-gold mt-1">$310.00</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Brand Story Section -->
+        <section id="about" class="py-24 px-6 lg:px-12 bg-autumn-cream">
+            <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
+                <div class="lg:w-1/2">
+                    <img src="https://images.unsplash.com/photo-1523381235312-341e41799408?auto=format&fit=crop&q=80&w=1000" class="rounded-sm shadow-xl" alt="Craftsmanship">
+                </div>
+                <div class="lg:w-1/2 space-y-6">
+                    <h2 class="text-sm uppercase tracking-[0.3em] text-autumn-rust">Sustainability</h2>
+                    <h3 class="text-5xl font-serif italic text-autumn-dark">Crafted by the Seasons</h3>
+                    <p class="text-lg leading-relaxed text-gray-700">
+                        At Autumn Point, we believe clothing should be a reflection of the earth's natural rhythm. We source low-impact materials that age as beautifully as the landscape. Each piece is designed to be a lifelong companion through every falling leaf and winter frost.
+                    </p>
+                    <a href="#" class="inline-block border-b-2 border-autumn-rust pb-2 font-bold uppercase tracking-widest text-sm">Read Our Manifesto</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter -->
+        <section class="py-20 bg-autumn-rust text-white text-center px-6">
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-3xl font-serif mb-4">Join the Collective</h2>
+                <p class="mb-8 opacity-80 uppercase tracking-widest text-xs">Receive early access to seasonal drops and editorial stories.</p>
+                <form id="subscribeForm" class="flex flex-col sm:flex-row gap-4">
+                    <input type="email" placeholder="Email Address" class="flex-grow bg-white/10 border border-white/20 px-6 py-4 outline-none placeholder:text-white/60 focus:bg-white/20 transition" required>
+                    <button type="submit" class="bg-white text-autumn-rust px-10 py-4 font-bold uppercase tracking-widest hover:bg-autumn-dark hover:text-white transition duration-300">Subscribe</button>
+                </form>
+                <div id="sub-feedback" class="mt-4 h-4 text-sm font-semibold"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-autumn-dark text-autumn-cream/60 py-16 px-6 lg:px-12 text-sm">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+            <div>
+                <h4 class="text-white font-serif text-xl mb-6">Autumn Point</h4>
+                <p>Curating a life of warmth and elegance since 2024.</p>
+            </div>
+            <div>
+                <h5 class="text-white uppercase tracking-widest mb-6 text-xs">Shop</h5>
+                <ul class="space-y-4">
+                    <li><a href="#" class="hover:text-white transition">All Items</a></li>
+                    <li><a href="#" class="hover:text-white transition">Gift Cards</a></li>
+                    <li><a href="#" class="hover:text-white transition">Size Guide</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="text-white uppercase tracking-widest mb-6 text-xs">Company</h5>
+                <ul class="space-y-4">
+                    <li><a href="#" class="hover:text-white transition">Our Story</a></li>
+                    <li><a href="#" class="hover:text-white transition">Sustainability</a></li>
+                    <li><a href="#" class="hover:text-white transition">Careers</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="text-white uppercase tracking-widest mb-6 text-xs">Support</h5>
+                <ul class="space-y-4">
+                    <li><a href="#" class="hover:text-white transition">Shipping & Returns</a></li>
+                    <li><a href="#" class="hover:text-white transition">Contact Us</a></li>
+                    <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto mt-16 pt-8 border-t border-white/10 text-center">
+            <p>&copy; 2025 Autumn Point Boutique. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-0 bg-autumn-dark z-[60] transform translate-x-full transition-transform duration-500 p-12 text-white">
+        <button onclick="toggleMenu()" class="absolute top-8 right-8">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="2"/></svg>
+        </button>
+        <div class="flex flex-col space-y-8 text-3xl font-serif mt-12">
+            <a href="#new" onclick="toggleMenu()">New Arrivals</a>
+            <a href="#collections" onclick="toggleMenu()">Collections</a>
+            <a href="#about" onclick="toggleMenu()">Our Story</a>
+            <a href="#contact" onclick="toggleMenu()">Contact</a>
+        </div>
+    </div>
+
+    <!-- Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'autumn-point-clothing';
+
+        let user;
+        onAuthStateChanged(auth, (u) => { user = u; });
+        signInAnonymously(auth);
+
+        document.getElementById('subscribeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const feedback = document.getElementById('sub-feedback');
+            const email = e.target.querySelector('input').value;
+
+            if (!user) return;
+
+            try {
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'subscribers'), {
+                    email,
+                    timestamp: new Date().toISOString()
+                });
+                feedback.textContent = "Welcome to the collective.";
+                feedback.className = "mt-4 h-4 text-sm font-semibold text-white";
+                e.target.reset();
+            } catch (err) {
+                feedback.textContent = "An error occurred. Try again soon.";
+                feedback.className = "mt-4 h-4 text-sm font-semibold text-autumn-dark";
+            }
+        });
+
+        window.toggleMenu = () => {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('translate-x-full');
+        };
+    </script>
+</body>
+</html>
