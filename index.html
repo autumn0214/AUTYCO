@@ -1,419 +1,386 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AUTYCO - Interactive Clothing Viewer</title>
+    <title>AUTYCO | Timeless Seasonal Apparel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'autumn-rust': '#a34e2b',
+                        'autumn-gold': '#d4a373',
+                        'autumn-moss': '#606c38',
+                        'autumn-cream': '#fefae0',
+                        'autumn-dark': '#283618',
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 1s ease-out forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(30px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        html { scroll-behavior: smooth; }
+        .hero-parallax {
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80&w=2070');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
         }
-
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 40px;
-        }
-
-        .header h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
-
-        /* Clothing Display Container */
-        .clothing-container {
-            position: relative;
-            width: 100%;
-            height: 600px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-        }
-
-        /* Draggable Clothing Items */
-        .clothing-item {
-            position: absolute;
-            width: 200px;
-            height: 280px;
-            background: white;
-            border-radius: 15px;
-            padding: 15px;
-            cursor: grab;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s, box-shadow 0.2s;
-            user-select: none;
-            touch-action: none;
-        }
-
-        .clothing-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .clothing-item:active {
-            cursor: grabbing;
-        }
-
-        .clothing-item.dragging {
-            opacity: 0.9;
-            z-index: 1000;
-            transform: scale(1.05);
-        }
-
-        /* Image Container */
-        .item-image {
-            width: 100%;
-            height: 180px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            margin-bottom: 10px;
-            overflow: hidden;
-            font-size: 14px;
-            text-align: center;
-        }
-
-        .item-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Item Info */
-        .item-info {
-            padding: 0 5px;
-        }
-
-        .item-name {
-            font-size: 1.1em;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-
-        .item-price {
-            color: #667eea;
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .item-category {
-            font-size: 0.85em;
-            color: #888;
-            background: #f0f0f0;
-            padding: 3px 8px;
-            border-radius: 12px;
-            display: inline-block;
-        }
-
-        /* Controls */
-        .controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
-        }
-
-        button {
-            padding: 12px 25px;
-            font-size: 1em;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-            background: white;
-            color: #667eea;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        button:active {
+        .reveal.active {
+            opacity: 1;
             transform: translateY(0);
         }
-
-        .btn-primary {
-            background: #667eea;
-            color: white;
+        .overlap-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
         }
-
-        .btn-secondary {
-            background: #764ba2;
-            color: white;
-        }
-
-        /* Instructions */
-        .instructions {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            color: #333;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .instructions h2 {
-            margin-bottom: 10px;
-            color: #667eea;
-        }
-
-        .instructions ul {
-            margin-left: 20px;
-            line-height: 1.8;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .clothing-container {
-                height: 500px;
-            }
-
-            .clothing-item {
-                width: 160px;
-                height: 240px;
-            }
-
-            .header h1 {
-                font-size: 2em;
-            }
+        .floating-accent {
+            pointer-events: none;
+            z-index: 10;
         }
     </style>
 </head>
-<body>
-    <div class="header">
-        <h1>🛍️ AUTYCO Clothing Viewer</h1>
-        <p>Drag and arrange items to explore our collection</p>
+<body class="bg-autumn-cream text-autumn-dark font-sans overflow-x-hidden">
+
+    <!-- Announcement Bar -->
+    <div class="bg-autumn-dark text-autumn-cream text-center py-2 text-xs uppercase tracking-widest relative z-[60]">
+        Free Worldwide Shipping on Orders Over $150
     </div>
 
-    <div class="instructions">
-        <h2>✨ How to Use:</h2>
-        <ul>
-            <li><strong>Drag items:</strong> Click and drag any clothing box to move it around</li>
-            <li><strong>Stack items:</strong> Items can overlap - drag them on top of each other</li>
-            <li><strong>Quick actions:</strong> Use buttons below to arrange or shuffle items</li>
-            <li><strong>Mobile friendly:</strong> Touch and drag works on mobile devices too</li>
-        </ul>
-    </div>
+    <!-- Navigation -->
+    <header class="sticky top-0 z-50 bg-autumn-cream/80 backdrop-blur-md border-b border-autumn-rust/10">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center py-6">
+            <nav class="hidden md:flex space-x-8 text-sm uppercase tracking-widest font-semibold">
+                <a href="#new" class="hover:text-autumn-rust transition">New Arrivals</a>
+                <a href="#collections" class="hover:text-autumn-rust transition">Collections</a>
+            </nav>
 
-    <div class="controls">
-        <button class="btn-primary" onclick="resetPositions()">Reset Positions</button>
-        <button class="btn-secondary" onclick="randomizePositions()">Shuffle Items</button>
-        <button class="btn-primary" onclick="stackAll()">Stack All</button>
-        <button class="btn-secondary" onclick="distributeItems()">Distribute</button>
-    </div>
+            <a href="#" class="text-3xl font-serif font-bold text-autumn-rust tracking-tighter hover:scale-105 transition-transform duration-300">
+                Autumn Point
+            </a>
 
-    <div class="clothing-container" id="clothingContainer"></div>
+            <div class="flex items-center space-x-6">
+                <a href="#about" class="hidden md:block text-sm uppercase tracking-widest font-semibold hover:text-autumn-rust transition">Our Story</a>
+                <button class="relative hover:scale-110 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-width="1.5"/></svg>
+                    <span class="absolute -top-2 -right-2 bg-autumn-rust text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center animate-pulse">0</span>
+                </button>
+                <button class="md:hidden" onclick="toggleMenu()">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-width="1.5"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
 
-    <script>
-        // Sample clothing items - modify or add more items here
-        const clothingItems = [
-            { name: 'Blue Hoodie', price: '$45.99', category: 'Tops', color: '#3498db' },
-            { name: 'Black Jeans', price: '$59.99', category: 'Bottoms', color: '#2c3e50' },
-            { name: 'Red Jacket', price: '$79.99', category: 'Outerwear', color: '#e74c3c' },
-            { name: 'White T-Shirt', price: '$19.99', category: 'Tops', color: '#ecf0f1' },
-            { name: 'Grey Sweater', price: '$49.99', category: 'Tops', color: '#95a5a6' },
-            { name: 'Denim Shorts', price: '$39.99', category: 'Bottoms', color: '#34495e' }
-        ];
+    <main>
+        <!-- Hero Section with Parallax -->
+        <section class="hero-parallax h-[95vh] flex items-center justify-center text-center text-white px-6 relative overflow-hidden">
+            <div class="max-w-3xl relative z-20 animate-fade-in-up">
+                <h2 class="text-sm uppercase tracking-[0.4em] mb-4 opacity-90 drop-shadow-md">The Equinox Collection</h2>
+                <h1 class="text-6xl md:text-8xl font-serif mb-8 leading-tight drop-shadow-xl">Warmth in Every Layer</h1>
+                <a href="#new" class="inline-block bg-white text-autumn-dark px-12 py-5 font-semibold uppercase tracking-widest hover:bg-autumn-rust hover:text-white transition-all duration-500 shadow-2xl hover:-translate-y-1">
+                    Shop The Look
+                </a>
+            </div>
+            <!-- Decorative Floating Text -->
+            <div class="absolute top-1/4 -left-20 text-[15rem] font-serif text-white/5 whitespace-nowrap hidden lg:block select-none animate-float">
+                Autumn Spirit
+            </div>
+        </section>
 
-        let draggedElement = null;
-        let offset = { x: 0, y: 0 };
-        let containerRect = null;
-
-        // Initialize the clothing display
-        function initializeClothing() {
-            const container = document.getElementById('clothingContainer');
-            container.innerHTML = '';
-            containerRect = container.getBoundingClientRect();
-
-            clothingItems.forEach((item, index) => {
-                const itemElement = createClothingElement(item, index);
-                container.appendChild(itemElement);
-            });
-        }
-
-        // Create individual clothing item element
-        function createClothingElement(item, index) {
-            const element = document.createElement('div');
-            element.className = 'clothing-item';
-            element.innerHTML = `
-                <div class="item-image" style="background: ${item.color};">
-                    <div style="text-align: center;">
-                        <div style="font-size: 40px; margin-bottom: 5px;">👕</div>
-                        <div>${item.name}</div>
+        <!-- Overlapping Interactive Collections -->
+        <section id="collections" class="py-32 px-6 lg:px-12 relative">
+            <div class="max-w-7xl mx-auto overlap-grid gap-y-20 lg:gap-y-0">
+                
+                <!-- Collection 1: Left Overlap -->
+                <div class="col-span-12 lg:col-span-7 reveal relative z-10">
+                    <div class="group cursor-pointer overflow-hidden shadow-2xl">
+                        <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=1200" 
+                             class="w-full h-[600px] object-cover transition duration-1000 group-hover:scale-110" alt="Knitwear">
+                        <div class="absolute inset-0 bg-gradient-to-t from-autumn-dark/60 to-transparent opacity-60 group-hover:opacity-80 transition duration-500"></div>
+                        <div class="absolute bottom-12 left-12 text-white">
+                            <h3 class="text-4xl font-serif mb-2">The Knit Gallery</h3>
+                            <p class="text-sm uppercase tracking-[0.2em] opacity-80">Softness re-defined</p>
+                        </div>
                     </div>
                 </div>
-                <div class="item-info">
-                    <div class="item-name">${item.name}</div>
-                    <div class="item-price">${item.price}</div>
-                    <span class="item-category">${item.category}</span>
+
+                <!-- Collection 2: Overlapping In-set -->
+                <div class="col-span-12 lg:col-span-6 lg:-ml-24 lg:mt-48 reveal relative z-20">
+                    <div class="bg-autumn-rust p-12 lg:p-20 shadow-2xl text-autumn-cream">
+                        <h2 class="text-sm uppercase tracking-[0.3em] mb-6 opacity-80">Featured Selection</h2>
+                        <h3 class="text-4xl md:text-5xl font-serif italic mb-8 leading-tight">Heritage Wool & Hand-woven Silks</h3>
+                        <p class="text-lg opacity-90 mb-10 font-light leading-relaxed">
+                            Discover pieces designed for the shift in light and temperature. Our Equinox range blends rugged textures with delicate finishing.
+                        </p>
+                        <a href="#" class="inline-block border-b border-autumn-cream pb-2 font-bold uppercase tracking-widest text-sm hover:text-autumn-gold transition">View Collection</a>
+                    </div>
                 </div>
-            `;
 
-            // Set initial random position
-            const x = Math.random() * (containerRect.width - 200);
-            const y = Math.random() * (containerRect.height - 280);
-            element.style.left = x + 'px';
-            element.style.top = y + 'px';
-            element.style.zIndex = index;
+                <!-- Collection 3: Right Floating -->
+                <div class="col-span-12 lg:col-span-5 lg:ml-auto lg:-mt-24 reveal relative z-30">
+                    <div class="group cursor-pointer overflow-hidden shadow-2xl aspect-[4/5]">
+                        <img src="https://images.unsplash.com/photo-1511406361295-0a5ff814c0ad?auto=format&fit=crop&q=80&w=800" 
+                             class="w-full h-full object-cover transition duration-1000 group-hover:scale-110" alt="Accessories">
+                        <div class="absolute inset-0 bg-autumn-dark/20 group-hover:bg-autumn-dark/40 transition duration-500"></div>
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-center w-full">
+                            <h3 class="text-3xl font-serif">Essentials</h3>
+                            <p class="text-xs uppercase tracking-widest mt-2 border-b border-white inline-block">Shop Now</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-            // Add drag event listeners
-            element.addEventListener('mousedown', startDrag);
-            element.addEventListener('touchstart', startDrag);
+        <!-- New Arrivals Showcase with Hover Interactions -->
+        <section id="new" class="bg-autumn-dark text-autumn-cream py-32 px-6 lg:px-12 relative overflow-hidden">
+            <!-- Background Decorative element -->
+            <div class="absolute top-0 right-0 w-96 h-96 bg-autumn-rust/10 rounded-full blur-3xl -mr-48 -mt-48"></div>
 
-            return element;
-        }
+            <div class="max-w-7xl mx-auto relative z-10">
+                <div class="flex flex-col md:flex-row justify-between items-baseline mb-20 reveal">
+                    <div>
+                        <h2 class="text-5xl font-serif italic mb-4">New Arrivals</h2>
+                        <p class="text-autumn-gold uppercase tracking-[0.3em] text-xs">Recently Harvested Styles</p>
+                    </div>
+                    <a href="#" class="mt-6 md:mt-0 text-sm border-b border-autumn-gold pb-1 hover:text-autumn-gold transition">Browse Full Catalog</a>
+                </div>
 
-        // Start dragging
-        function startDrag(e) {
-            draggedElement = this;
-            const rect = this.getBoundingClientRect();
-            containerRect = document.getElementById('clothingContainer').getBoundingClientRect();
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
+                    <!-- Product Card 1 -->
+                    <div class="group reveal" style="transition-delay: 100ms;">
+                        <div class="overflow-hidden mb-6 aspect-[3/4] relative">
+                            <img src="https://placehold.co/600x800/283618/fefae0?text=Premium+Coat" class="w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="Coat">
+                            <button class="absolute bottom-4 left-4 right-4 bg-white text-autumn-dark py-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0 uppercase text-xs font-bold tracking-widest">Quick Add +</button>
+                        </div>
+                        <h4 class="font-serif text-xl">Oversized Cashmere Scarf</h4>
+                        <p class="text-autumn-gold mt-2 font-light">$120.00</p>
+                    </div>
+                    <!-- Product Card 2 -->
+                    <div class="group reveal" style="transition-delay: 200ms;">
+                        <div class="overflow-hidden mb-6 aspect-[3/4] relative">
+                            <img src="https://placehold.co/600x800/a34e2b/fefae0?text=Knitwear" class="w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="Cardigan">
+                            <button class="absolute bottom-4 left-4 right-4 bg-white text-autumn-dark py-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0 uppercase text-xs font-bold tracking-widest">Quick Add +</button>
+                        </div>
+                        <h4 class="font-serif text-xl">Rustic Wool Cardigan</h4>
+                        <p class="text-autumn-gold mt-2 font-light">$245.00</p>
+                    </div>
+                    <!-- Product Card 3 -->
+                    <div class="group reveal" style="transition-delay: 300ms;">
+                        <div class="overflow-hidden mb-6 aspect-[3/4] relative">
+                            <img src="https://placehold.co/600x800/d4a373/283618?text=Trousers" class="w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="Trousers">
+                            <button class="absolute bottom-4 left-4 right-4 bg-white text-autumn-dark py-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0 uppercase text-xs font-bold tracking-widest">Quick Add +</button>
+                        </div>
+                        <h4 class="font-serif text-xl">Amber Corduroy Trousers</h4>
+                        <p class="text-autumn-gold mt-2 font-light">$185.00</p>
+                    </div>
+                    <!-- Product Card 4 -->
+                    <div class="group reveal" style="transition-delay: 400ms;">
+                        <div class="overflow-hidden mb-6 aspect-[3/4] relative">
+                            <img src="https://placehold.co/600x800/606c38/fefae0?text=Silk+Dress" class="w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="Dress">
+                            <button class="absolute bottom-4 left-4 right-4 bg-white text-autumn-dark py-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0 uppercase text-xs font-bold tracking-widest">Quick Add +</button>
+                        </div>
+                        <h4 class="font-serif text-xl">Forest Silk Slip Dress</h4>
+                        <p class="text-autumn-gold mt-2 font-light">$310.00</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-            const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-            const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+        <!-- Brand Story: Extreme Overlap -->
+        <section id="about" class="py-40 px-6 lg:px-12 bg-autumn-cream relative overflow-hidden">
+            <div class="max-w-7xl mx-auto relative flex flex-col lg:flex-row items-center">
+                
+                <!-- Floating Back Text -->
+                <div class="absolute top-0 right-0 text-[12rem] font-serif text-autumn-rust/5 -translate-y-1/2 select-none pointer-events-none">
+                    Earthy
+                </div>
 
-            offset.x = clientX - rect.left;
-            offset.y = clientY - rect.top;
+                <!-- Main Image -->
+                <div class="w-full lg:w-3/5 reveal shadow-2xl z-10">
+                    <img src="https://images.unsplash.com/photo-1523381235312-341e41799408?auto=format&fit=crop&q=80&w=1200" class="w-full grayscale-[0.2] hover:grayscale-0 transition-all duration-1000" alt="Craftsmanship">
+                </div>
 
-            this.classList.add('dragging');
-            this.style.zIndex = 9999;
+                <!-- Overlapping Content Card -->
+                <div class="w-full lg:w-2/5 bg-white p-10 lg:p-16 lg:-ml-32 mt-12 lg:mt-32 shadow-2xl z-20 reveal relative">
+                    <h2 class="text-xs uppercase tracking-[0.4em] text-autumn-rust mb-6">Our Philosophy</h2>
+                    <h3 class="text-4xl font-serif italic text-autumn-dark mb-8">Rooted in Tradition, Tailored for Now.</h3>
+                    <p class="text-gray-600 leading-relaxed mb-8">
+                        Every thread tells a story of the harvest. We source our fibers from artisans who respect the land, ensuring that your Autumn Point piece isn't just a garment, but a heritage investment.
+                    </p>
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-[1px] bg-autumn-rust"></div>
+                        <span class="text-xs uppercase tracking-widest font-bold">Discover Sustainability</span>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-            document.addEventListener('mousemove', drag);
-            document.addEventListener('touchmove', drag, { passive: false });
-            document.addEventListener('mouseup', stopDrag);
-            document.addEventListener('touchend', stopDrag);
+        <!-- Interactive Newsletter -->
+        <section class="py-24 bg-autumn-rust text-white text-center px-6 relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10 pointer-events-none">
+                <svg width="100%" height="100%"><pattern id="pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M0 40L40 0M-10 10L10 -10M30 50L50 30" stroke="white" stroke-width="1"/></pattern><rect width="100%" height="100%" fill="url(#pattern)"/></svg>
+            </div>
+            <div class="max-w-2xl mx-auto relative z-10 reveal">
+                <h2 class="text-4xl font-serif mb-6">Join the Seasonal Collective</h2>
+                <p class="mb-10 opacity-80 uppercase tracking-[0.2em] text-xs">A newsletter for the contemplative dresser.</p>
+                <form id="subscribeForm" class="flex flex-col sm:flex-row gap-0 group">
+                    <input type="email" placeholder="Your Email Address" class="flex-grow bg-white/10 border border-white/30 px-8 py-5 outline-none placeholder:text-white/60 focus:bg-white/20 focus:border-white transition-all" required>
+                    <button type="submit" class="bg-white text-autumn-rust px-10 py-5 font-bold uppercase tracking-widest hover:bg-autumn-dark hover:text-white transition duration-500 shadow-xl">Subscribe</button>
+                </form>
+                <div id="sub-feedback" class="mt-6 h-6 text-sm font-semibold"></div>
+            </div>
+        </section>
+    </main>
 
-            e.preventDefault();
-        }
+    <!-- Footer -->
+    <footer class="bg-autumn-dark text-autumn-cream/40 py-20 px-6 lg:px-12 text-sm">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-16">
+            <div class="reveal">
+                <h4 class="text-white font-serif text-2xl mb-8">Autumn Point</h4>
+                <p class="leading-relaxed">Curating a life of warmth and quiet elegance since 2024. Designed in the mountains, worn everywhere.</p>
+            </div>
+            <div class="reveal" style="transition-delay: 100ms;">
+                <h5 class="text-white uppercase tracking-widest mb-8 text-xs font-bold">Shop</h5>
+                <ul class="space-y-4">
+                    <li><a href="#" class="hover:text-white transition">Newest Drops</a></li>
+                    <li><a href="#" class="hover:text-white transition">Seasonal Edits</a></li>
+                    <li><a href="#" class="hover:text-white transition">The Archive</a></li>
+                </ul>
+            </div>
+            <div class="reveal" style="transition-delay: 200ms;">
+                <h5 class="text-white uppercase tracking-widest mb-8 text-xs font-bold">Connect</h5>
+                <ul class="space-y-4">
+                    <li><a href="#" class="hover:text-white transition">Instagram</a></li>
+                    <li><a href="#" class="hover:text-white transition">Pinterest</a></li>
+                    <li><a href="#" class="hover:text-white transition">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="reveal" style="transition-delay: 300ms;">
+                <h5 class="text-white uppercase tracking-widest mb-8 text-xs font-bold">Legal</h5>
+                <ul class="space-y-4">
+                    <li><a href="#" class="hover:text-white transition">Sustainability Report</a></li>
+                    <li><a href="#" class="hover:text-white transition">Privacy & Ethics</a></li>
+                    <li><a href="#" class="hover:text-white transition">Return Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 opacity-60">
+            <p>&copy; 2025 Autumn Point Boutique. All Rights Reserved.</p>
+            <div class="flex space-x-6 uppercase text-[10px] tracking-widest">
+                <span>Designed for the Seasons</span>
+                <span>•</span>
+                <span>Slow Fashion Advocate</span>
+            </div>
+        </div>
+    </footer>
 
-        // Drag element
-        function drag(e) {
-            if (!draggedElement) return;
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-0 bg-autumn-dark z-[100] transform translate-x-full transition-transform duration-700 p-12 text-white flex flex-col justify-center text-center">
+        <button onclick="toggleMenu()" class="absolute top-10 right-10 hover:rotate-90 transition duration-300">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="2"/></svg>
+        </button>
+        <div class="flex flex-col space-y-10 text-4xl font-serif italic">
+            <a href="#new" onclick="toggleMenu()" class="hover:text-autumn-gold transition">New Arrivals</a>
+            <a href="#collections" onclick="toggleMenu()" class="hover:text-autumn-gold transition">Collections</a>
+            <a href="#about" onclick="toggleMenu()" class="hover:text-autumn-gold transition">Our Story</a>
+            <a href="#contact" onclick="toggleMenu()" class="hover:text-autumn-gold transition">Contact</a>
+        </div>
+    </div>
 
-            const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-            const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+    <!-- Interaction Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-            let x = clientX - containerRect.left - offset.x;
-            let y = clientY - containerRect.top - offset.y;
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'autumn-point-clothing';
 
-            // Constrain to container
-            x = Math.max(0, Math.min(x, containerRect.width - draggedElement.offsetWidth));
-            y = Math.max(0, Math.min(y, containerRect.height - draggedElement.offsetHeight));
+        let user;
+        onAuthStateChanged(auth, (u) => { user = u; });
+        signInAnonymously(auth);
 
-            draggedElement.style.left = x + 'px';
-            draggedElement.style.top = y + 'px';
+        // --- Scroll Reveal Logic ---
+        const observerOptions = {
+            threshold: 0.15
+        };
 
-            e.preventDefault();
-        }
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
 
-        // Stop dragging
-        function stopDrag() {
-            if (draggedElement) {
-                draggedElement.classList.remove('dragging');
-                draggedElement = null;
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- Parallax Effect on Hero ---
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const heroParallax = document.querySelector('.hero-parallax');
+            if (heroParallax) {
+                heroParallax.style.backgroundPositionY = (scrolled * 0.5) + 'px';
             }
-            document.removeEventListener('mousemove', drag);
-            document.removeEventListener('touchmove', drag);
-            document.removeEventListener('mouseup', stopDrag);
-            document.removeEventListener('touchend', stopDrag);
-        }
-
-        // Reset all items to random positions
-        function resetPositions() {
-            const items = document.querySelectorAll('.clothing-item');
-            items.forEach((item, index) => {
-                const x = Math.random() * (containerRect.width - 200);
-                const y = Math.random() * (containerRect.height - 280);
-                item.style.left = x + 'px';
-                item.style.top = y + 'px';
-                item.style.zIndex = index;
-            });
-        }
-
-        // Randomize positions with animation
-        function randomizePositions() {
-            const items = document.querySelectorAll('.clothing-item');
-            items.forEach((item, index) => {
-                setTimeout(() => {
-                    const x = Math.random() * (containerRect.width - 200);
-                    const y = Math.random() * (containerRect.height - 280);
-                    item.style.transition = 'all 0.5s ease';
-                    item.style.left = x + 'px';
-                    item.style.top = y + 'px';
-                }, index * 100);
-            });
-        }
-
-        // Stack all items
-        function stackAll() {
-            const items = document.querySelectorAll('.clothing-item');
-            items.forEach((item, index) => {
-                item.style.transition = 'all 0.4s ease';
-                item.style.left = (index * 20) + 'px';
-                item.style.top = (index * 20) + 'px';
-                item.style.zIndex = index;
-            });
-        }
-
-        // Distribute items evenly
-        function distributeItems() {
-            const items = document.querySelectorAll('.clothing-item');
-            const cols = Math.ceil(Math.sqrt(items.length));
-            const itemWidth = containerRect.width / cols;
-            const itemHeight = containerRect.height / Math.ceil(items.length / cols);
-
-            items.forEach((item, index) => {
-                const col = index % cols;
-                const row = Math.floor(index / cols);
-                const x = col * itemWidth + (itemWidth - 200) / 2;
-                const y = row * itemHeight + (itemHeight - 280) / 2;
-
-                item.style.transition = 'all 0.5s ease';
-                item.style.left = Math.max(0, x) + 'px';
-                item.style.top = Math.max(0, y) + 'px';
-                item.style.zIndex = index;
-            });
-        }
-
-        // Initialize on page load
-        window.addEventListener('load', initializeClothing);
-        window.addEventListener('resize', () => {
-            containerRect = document.getElementById('clothingContainer').getBoundingClientRect();
         });
+
+        // --- Newsletter Logic ---
+        document.getElementById('subscribeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const feedback = document.getElementById('sub-feedback');
+            const email = e.target.querySelector('input').value;
+
+            if (!user) return;
+
+            try {
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'subscribers'), {
+                    email,
+                    timestamp: new Date().toISOString()
+                });
+                feedback.textContent = "Welcome to the collective.";
+                feedback.className = "mt-6 h-6 text-sm font-semibold text-white animate-fade-in-up";
+                e.target.reset();
+            } catch (err) {
+                feedback.textContent = "Please try again later.";
+                feedback.className = "mt-6 h-6 text-sm font-semibold text-autumn-dark";
+            }
+        });
+
+        window.toggleMenu = () => {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('translate-x-full');
+        };
     </script>
 </body>
 </html>
